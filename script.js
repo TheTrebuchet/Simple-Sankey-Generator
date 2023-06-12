@@ -1,11 +1,8 @@
 import {Interactive} from "https://vectorjs.org/index.js";
 
 // Construct an interactive within the HTML element with the id "my-interactive"
-let myInteractive = new Interactive("my-interactive");
-myInteractive.border = true;
-
+let exInteractive = new Interactive("my-interactive");
+exInteractive.border = true;
+let line = exInteractive.line(20,20,40,40)
 // Construct a control point at the the location (100, 100)
-let control = myInteractive.control(100, 100);
-
-// Print the two objects to the console
-console.log( control, myInteractive);
+let control = exInteractive.control(100, 100);

@@ -1,3 +1,10 @@
+import {Interactive} from "https://vectorjs.org/index.js";
+
+
+let myInteractive = new Interactive("my-interactive");
+myInteractive.border = true
+let line = myInteractive.line( 40,40,80,80)
+
 class block {
     constructor(line) {
         this.name = line.substring(line.indexOf(" ") + 1); // get the name
@@ -84,7 +91,10 @@ function delta(typ, mass, height, name, coords, tang, skew) {
     }
     xy[1] += coords[1];
     for (let i = 0; i < verts.length - 1; i++) {
+        
+        let line = myInteractive.line( 20,20,40,40)
         //plt.plot((verts[i][0],verts[i+1][0]), (verts[i][1],verts[i+1][1]), c='black',zorder=1)
+
     }
     //ax.annotate(name + '\n'+str(round(mass,2)) + args.unit, xy, ha='center', va='center',zorder=2).draggable()
 }
@@ -137,17 +147,18 @@ function rowbyrow(rows, coords) {
         coords[0] += out;
     }
 }
+//import { readFileSync } from "fs";
 
-var lines = [];
-import { readFileSync } from "fs";
-var text = readFileSync("input.txt", "utf8");
+
+const fs = require('fs');
+const text = fs.readFileSync("input.txt", "utf8");
 var lines = text.split("\n");
 var rows = [];
 var level = 0;
 
-L_height = 0.2;
-s_height = 0.1;
-height = { L: L_height, s: s_height };
+var L_height = 0.2;
+var s_height = 0.1;
+const height = { L: L_height, s: s_height };
 var globalwidth = 0;
 var globalheight = 0;
 
