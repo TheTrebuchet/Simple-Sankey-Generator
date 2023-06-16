@@ -7,22 +7,26 @@
     <title>Getting Started</title>
     <script type="text/javascript" src="node_modules/paper/dist/paper-full.js"></script>
     <script type="text/javascript" src="graphic.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style type="text/css">
         .container {
             width: auto;
-            max-width: 800px;
+            max-width: 1000px;
             padding: 0 15px;
         }
 
         .container .text-muted {
             margin: 20px 0;
         }
+
         canvas[resize] {
-        width: 100%;
-        height: 100%;
+            width: 100%;
+            height: 100%;
+        }
+
+        .form-range::-moz-range-track {
+            background: #e6e6e6;
         }
     </style>
 </head>
@@ -53,16 +57,54 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                <label for="options" class="form-label">Options</label>
-                <input type="text" class="form-control" id="options">
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class="form-label" for="horsc">Horizontal Scale</label>
+                        <div class="range">
+                            <input type="range" class="form-range" id="schor" min="0" max="100" />
+                        </div>
+                        <label class="form-label" for="scver">Vertical Scale</label>
+                        <div class="range">
+                            <input type="range" class="form-range" id="scver" min="0" max="100" />
+                        </div>
+                        <label class="form-label" for="marg">Margin</label>
+                        <div class="range">
+                            <input type="range" class="form-range" id="marg" min="0" max="100" />
+                        </div>
+                        <label class="form-label" for="tsize">Text Size</label>
+                        <div class="range">
+                            <input type="range" class="form-range" id="tsize" min="0" max="100" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-5">
+                        <label for="unit" class="form-label">Unit</label>
+                        <input type="text" class="form-control" id="unit" placeholder="nope">
+                        <br>
+                        <label for="grid" class="form-label">Grid</label>
+                        <input type="text" class="form-control" id="grid" placeholder="nope">
+                    </div>
+                </div>
+                <br>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Presets
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">sankey2</a></li>
+                        <li><a class="dropdown-item" href="#">sankey11</a></li>
+                        <li><a class="dropdown-item" href="#">bicarbonate</a></li>
+                    </ul>
+                </div>
                 <br>
                 <label for="config" class="form-label">Config</label>
-                <textarea class="form-control" id="config" rows="10"></textarea>
+                <textarea class="form-control" id="config" rows="25"></textarea>
                 <br>
                 <button type="button" class="btn btn-success">Submit</button>
             </div>
-            <div class="col-md-5">
+            <div class="col-md">
                 <canvas id="myCanvas" resize></canvas>
             </div>
         </div>
@@ -82,9 +124,8 @@
         <p>Generating the config files is very straight-forward.</p>
         <h3 id="initiate-a-row">Initiate a row</h3>
         <p>Place a <code>#</code> and specify height with <code>L</code> being large and
-            <code>s</code> being small. Just like this:
+            <code>s</code> being small.
         </p>
-        <pre><code class="language-txt">#s</code></pre>
         <h3 id="initiate-blocks">Initiate blocks</h3>
         <p>Specify input/operation/output with +/=/- and type in text that will be displayed in the block. <em>General
                 convention is that blocks should come in a sequence of outputs, operations and inputs, but that's just
@@ -93,10 +134,13 @@
         <p>If you want to make loops, just make +@ for loop input and -@ for loop output. Currently only one loop is
             supported.
         </p>
-        <pre><code>#s
+        <div class="card w-50">
+            <div class="card-body">
+                <pre><code>#s
 =1038.34 wet bicarbonate
--88.84 loss of CO$_2$
-</code></pre>
+-88.84 loss of CO$_2$</code></pre>
+            </div>
+        </div>
 
         <p>New blocks within the row exist are placed simply below. Any kind of python formatting is acceptable.<br />
             Notably <code>\n</code> is for newline and <code>$_a$</code> is for subscripts
@@ -112,7 +156,9 @@
         <p>!!! be sure to make additional height in the top-level row. Say your top level row consists of one large and
             one
             small row, you initiate it by <code>#Ls</code> !!!</p>
-        <pre><code class="language-txt">#s
+        <div class="card w-50">
+            <div class="card-body">
+                <pre><code>#s
 =1038.34
 -88.84 loss of CO$_2$
 #Ls
@@ -120,13 +166,13 @@
   #L
   =121.56 wet bicarbonate
   #s
-  =121.56 drying
-</code></pre>
-        <p>change text position to your liking, be aware that while resizing the window still lets you drag it, if you
-            zoom
-            in
-            or out you will lose that ability</p>
-    </div>
+  =121.56 drying</div></div></code></pre>
+                <p>change text position to your liking, be aware that while resizing the window still lets you drag it,
+                    if you
+                    zoom
+                    in
+                    or out you will lose that ability</p>
+            </div>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 class block {
-    constructor(line) {
+    constructor(line, unit) {
         this.name = line.substring(line.indexOf(" ") + 1); // get the name
         this.delta = line
             .substring(0, line.indexOf(" "))
@@ -8,7 +8,7 @@ class block {
         this.value = parseFloat(
             line.substring(0, line.indexOf(" ")).match(/[\d.]/g).join("")
         ); //get just the value
-        this.unit = 'g/h'
+        this.unit = unit
     }
 }
 //for drawing the box
@@ -62,39 +62,40 @@ function delta(entry, height, coords, tang, skew, scaling, margins) {
     if (typ == "-") {
         let preverts = geo[typ];
         for (let i = 0; i < preverts.length; i++) {
-            verts.push([preverts[i][0] + preverts[i][1] * skew, preverts[i][1]]);
+            verts.push([preverts[i][0] + preverts[i][1] * skew,
+            preverts[i][1]
+            ]);
         }
     } else if (typ == "+") {
         let preverts = geo[typ];
         for (let i = 0; i < preverts.length; i++) {
             verts.push([
                 preverts[i][0] + (preverts[i][1] + height) * skew,
-                preverts[i][1],
+                preverts[i][1]
             ]);
         }
     } else {
         verts = geo[typ];
     }
     for (let i = 0; i < verts.length; i++) {
-        verts[i] = [verts[i][0] + coords[0], verts[i][1] + coords[1]];
+        verts[i] = [(verts[i][0] + coords[0]) * scaling[0] + margins[0], -(verts[i][1] + coords[1]) * scaling[1] - margins[1]];
     }
 
-    //xy is coordinates of name
-    let xy = [mass / 2, -height / 2];
-    if (typ == "+") {
-        xy[0] += -xy[1] * skew + coords[0];
-    } else {
-        xy[0] += xy[1] * skew + coords[0];
-    }
-    xy[1] += coords[1];
-    
-    var path = new paper.Path();
+    var path = new Path();
     path.strokeColor = 'black';
-    
+    let x = 0
+    let y = 0
     for (let i = 0; i < verts.length; i++) {
-        path.add(new paper.Point(margins[0]+verts[i][0]*scaling[0], -margins[1]-verts[i][1]*scaling[1]))
+        path.add(new Point(verts[i][0], verts[i][1]))
+        x += verts[i][0]
+        y += verts[i][1]
     }
-    let label = name + ' ' + String(mass) + entry.unit
+    xy = [x / verts.length, y / verts.length]
+
+    var text = new PointText(new Point(xy[0], xy[1]));
+    text.justification = 'center';
+    text.fillColor = 'black';
+    text.content = name + ' ' + String(mass) + entry.unit;
     //let text = myInteractive.text(xy[0]*scaling,-xy[1], label);
     //ax.annotate(name + '\n'+str(round(mass,2)) + args.unit, xy, ha='center', va='center',zorder=2).draggable()
 }
@@ -118,8 +119,8 @@ function rowbyrow(rows, height, coords, tang, skew, scaling, margins) {
             if (!entry.name) {
                 rowbyrow(entry, height, [coords[0] + mass, coords[1]], tang, skew, scaling, margins);
                 //if last blocks were outputting, the coords are updated accordingly
-                for (let i = 1; i < entry.length-1; i++) {
-                    let b = entry[entry.length-1][i];
+                for (let i = 1; i < entry.length - 1; i++) {
+                    let b = entry[entry.length - 1][i];
                     if (b.delta.includes('-')) {
                         coords[0] += b.value;
                     }
@@ -140,16 +141,49 @@ function rowbyrow(rows, height, coords, tang, skew, scaling, margins) {
     }
 }
 
-window.onload = function() {
+paper.install(window);
+window.onload = function () {
+    var hitOptions = {
+        segments: true,
+        stroke: true,
+        fill: true,
+        tolerance: 5
+    };
+    var tool = new Tool()
+    var current
+    tool.onMouseDown = function (event) {
+        segment = path = null;
+        var hitResult = project.hitTest(event.point, hitOptions);
+        console.log(hitResult)
+        if (!hitResult)
+            return;
+
+        if (hitResult.type = "fill") {
+            current = hitResult.item;
+            }
+        }
+    
+    tool.onMouseDrag = function(event) {
+        if (current) {
+            current.position = current.position.add(event.delta)
+        }
+    }
+
+    tool.onMouseMove = function(event) {
+        if (!event.item)
+            current = null;
+    }
+
     // Get a reference to the canvas object
     var canvas = document.getElementById('myCanvas');
     // Create an empty project and a view for the canvas:
     paper.setup(canvas);
     // Create a Paper.js Path to draw a line into it:
 
-    const text = document.getElementById("config").value;
-    console.log(text)
-    var lines = text.split("\n");
+    const scx = document.getElementById("schor").value / 50;
+    const scy = document.getElementById("scver").value / 50;
+    const unit = document.getElementById("unit").value;
+    var lines = document.getElementById("config").value.split("\n");
     var rows = [];
     var level = 0;
 
@@ -158,7 +192,7 @@ window.onload = function() {
     const height = { L: L_height, s: s_height };
     var globalwidth = 0;
     var globalheight = 0;
-    const margins = [5,-5]
+    const margins = [20, -10]
 
     for (let i = 0; i < lines.length; i++) {
         let l = lines[i].trimEnd().replace("    ", "\t");
@@ -181,6 +215,7 @@ window.onload = function() {
             }
         } else if (l != '') {
             let entry = new block(l.trim());
+            entry.unit = unit
             rows[rows.length - 1].push(entry);
             if (entry.delta.includes("+")) {
                 globalwidth += entry.value;
@@ -190,13 +225,14 @@ window.onload = function() {
     rows.splice(-1, 1); //delete the last bit
 
     //settings
-    const scaling = [1*globalheight / globalwidth, 1]
-    scaling[0] *= 0.8
-    scaling[1] *= 1.5
-    const skew =  0.3/scaling[0];
+    const scaling = [globalheight / globalwidth, 1]
+    scaling[0] *= scx
+    scaling[1] *= scy
+    const skew = 0.3 / scaling[0];
     const tang = (globalheight / globalwidth) * 0.2;
     var coords = [0, 0];
     var loop = [];
     //drawing the whole thing
     rowbyrow(rows, height, coords, tang, skew, scaling, margins);
+
 }

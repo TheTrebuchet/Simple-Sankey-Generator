@@ -1,20 +1,38 @@
-// Construct an interactive within the HTML element with the id "my-interactive"
-window.onload = function() {
-    const text = document.getElementById("config").value
-    // Get a reference to the canvas object
-    var canvas = document.getElementById('myCanvas');
-    // Create an empty project and a view for the canvas:
-    paper.setup(canvas);
-    // Create a Paper.js Path to draw a line into it:
-    var path = new paper.Path();
-    // Give the stroke a color
-    path.strokeColor = 'black';
-    var start = new paper.Point(parseFloat(text), 100);
-    // Move to start and draw a line from there
-    path.moveTo(start);
-    // Note that the plus operator on Point objects does not work
-    // in JavaScript. Instead, we need to call the add() function:
-    path.lineTo(start.add([ 200, -parseFloat(text) ]));
-    // Draw the view now:
-    paper.view.draw();
+paper.install(window);
+window.onload = function () {
+    var hitOptions = {
+        segments: true,
+        stroke: true,
+        fill: true,
+        tolerance: 5
+    };
+    paper.setup('myCanvas');
+    var text = new PointText(new Point(50, 50));
+    text.justification = 'center';
+    text.fillColor = 'black';
+    text.content = 'hjello';
+    var tool = new Tool()
+    var current
+    tool.onMouseDown = function (event) {
+        segment = path = null;
+        var hitResult = project.hitTest(event.point, hitOptions);
+        console.log(hitResult)
+        if (!hitResult)
+            return;
+
+        if (hitResult.type = "fill") {
+            current = hitResult.item;
+            }
+        }
+    
+    tool.onMouseDrag = function(event) {
+        if (current) {
+            current.position = current.position.add(event.delta)
+        }
+    }
+
+    tool.onMouseMove = function(event) {
+        if (!event.item)
+            current = null;
+    }
 }
