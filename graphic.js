@@ -154,11 +154,10 @@ window.onload = function () {
     tool.onMouseDown = function (event) {
         segment = path = null;
         var hitResult = project.hitTest(event.point, hitOptions);
-        console.log(hitResult)
         if (!hitResult)
             return;
 
-        if (hitResult.type = "fill") {
+        if (hitResult.type == "fill") {
             current = hitResult.item;
             }
         }

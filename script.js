@@ -10,7 +10,11 @@ window.onload = function () {
     var text = new PointText(new Point(50, 50));
     text.justification = 'center';
     text.fillColor = 'black';
-    text.content = 'hjello';
+    var inp = document.getElementById("config").value;
+    var inp = 'hjello \n itsme'
+    console.log(inp)
+    text.content = inp
+    console.log(text.content)
     var tool = new Tool()
     var current
     tool.onMouseDown = function (event) {
