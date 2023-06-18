@@ -1,4 +1,4 @@
-import {rowbyrow, block} from "./functions.js"
+import {rowbyrow, block} from "./functions.js";
 
 function generate () {
     // Get a reference to the canvas object
