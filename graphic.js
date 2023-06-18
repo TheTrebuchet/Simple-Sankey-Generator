@@ -1,36 +1,6 @@
 import {rowbyrow, block} from "./functions.js"
 
-paper.install(window);
-window.onload = function () {
-    var hitOptions = {
-        segments: true,
-        stroke: true,
-        fill: true,
-        tolerance: 5
-    };
-    var tool = new Tool()
-    var current
-    tool.onMouseDown = function (event) {
-        var hitResult = project.hitTest(event.point, hitOptions);
-        if (!hitResult)
-            return;
-
-        if (hitResult.type == "fill") {
-            current = hitResult.item;
-            }
-        }
-    
-    tool.onMouseDrag = function(event) {
-        if (current) {
-            current.position = current.position.add(event.delta)
-        }
-    }
-
-    tool.onMouseMove = function(event) {
-        if (!event.item)
-            current = null;
-    }
-
+function generate () {
     // Get a reference to the canvas object
     var canvas = document.getElementById('myCanvas');
     // Create an empty project and a view for the canvas:
@@ -91,5 +61,49 @@ window.onload = function () {
     var loop = [];
     //drawing the whole thing
     rowbyrow(rows, height, coords, tang, skew, scaling, margins);
+}
 
+paper.install(window);
+window.onload = function () {
+    var hitOptions = {
+        segments: true,
+        stroke: true,
+        fill: true,
+        tolerance: 5
+    };
+    var tool = new Tool()
+    var current
+    tool.onMouseDown = function (event) {
+        var hitResult = project.hitTest(event.point, hitOptions);
+        if (!hitResult)
+            return;
+
+        if (hitResult.type == "fill") {
+            current = hitResult.item;
+            }
+        }
+    
+    tool.onMouseDrag = function(event) {
+        if (current) {
+            current.position = current.position.add(event.delta)
+        }
+    }
+
+    tool.onMouseMove = function(event) {
+        if (!event.item)
+            current = null;
+    }
+    generate()
+}
+
+const inps = ['config', 'unit', 'grid']
+for (let i=0; i<inps.length; i++) {
+    let el = document.getElementById(inps[i]);
+    el.addEventListener("keyup", () => {generate()});
+}
+    
+const sliders = ['schor', 'scver']
+for (let i=0; i<sliders.length; i++) {
+    let el = document.getElementById(sliders[i]);
+    el.addEventListener("change", () => {generate()});
 }

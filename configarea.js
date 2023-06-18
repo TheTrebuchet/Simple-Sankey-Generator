@@ -10,3 +10,6 @@ function calcHeight(value) {
     textarea.rows = calcHeight(textarea.value);
   });
   
+  window.onload = function () {
+    textarea.rows = calcHeight(textarea.value);
+  }

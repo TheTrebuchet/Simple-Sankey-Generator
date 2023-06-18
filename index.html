@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Getting Started</title>
     <script type="text/javascript" src="node_modules/paper/dist/paper-full.js"></script>
+    <!--script type="module" src="configarea.js"></script-->
     <script type="module" src="graphic.js"></script>
-    <script type="module" src="configarea.js"></script>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function(event) { 
          document.getElementById("download-to-svg").onclick = function(){
@@ -35,7 +35,7 @@
 
         canvas[resize] {
             width: 100%;
-            height: 100%;
+            height: 800px;
         }
 
         .form-range::-moz-range-track {
@@ -114,9 +114,8 @@
                 </div-->
                 <br>
                 <label for="config" class="form-label">Config</label>
-                <textarea class="form-control" id="config" rows="5"></textarea>
+                <textarea class="form-control" id="config" rows="20"></textarea>
                 <br>
-                <button type="button" class="btn btn-success">Submit</button>
                 <button id="download-to-svg" class="btn btn-success">Download</button>
             </div>
             <div class="col-md">
