@@ -11,7 +11,7 @@ window.onload = function () {
     text.justification = 'center';
     text.fillColor = 'black';
     var inp = document.getElementById("config").value;
-    var inp = 'hjello \n itsme'
+    inp = inp
     console.log(inp)
     text.content = inp
     console.log(text.content)
