@@ -147,10 +147,10 @@ function gridersettings(path) {
     path.dashArray = [8, 4];
 }
 
-export function grider(size, unit, glh, glw, marg, scaling) {
+export function grider(size, unit, glh, glw, marg, scaling, txs) {
     var xsize = scaling[0]*size;
-    var xlen = Math.ceil((glw*scaling[0]+marg*2)/xsize)+2;
-    var ylen = Math.ceil((glh*scaling[1]+marg*2)/xsize)+2;
+    var xlen = Math.ceil((glw*scaling[0]+marg)/xsize)+2;
+    var ylen = Math.ceil((glh*scaling[1]+marg)/xsize)+2;
     var xlim = (xlen-2)*xsize+marg
     var ylim = (ylen-2)*xsize+marg
     for (let i = 0; i < xlen; i++) {
@@ -177,6 +177,30 @@ export function grider(size, unit, glh, glw, marg, scaling) {
         path.add(new Point(frame[i+1]))
 
     }
-    
-
+    var start = [marg,ylim-xsize]
+    var end = [marg+xsize,ylim-xsize]
+    var ard = 5
+    var arrow = [
+        start,
+        end,
+        [start[0],start[1]],
+        [start[0]+ard, start[1]-ard],
+        [start[0],start[1]],
+        [start[0]+ard,start[1]+ard],
+        [end[0],end[1]],
+        [end[0]-ard,end[1]-ard],
+        [end[0],end[1]],
+        [end[0]-ard,end[1]+ard]]
+    for (let i=0; i<arrow.length; i+=2) {
+        var path = new Path()
+        path.strokeColor = 'black'
+        path.add(new Point(arrow[i]))
+        path.add(new Point(arrow[i+1]))
+    }
+    var text = new PointText(new Point(marg+xsize/2,ylim-xsize-ard));
+    text.justification = 'center';
+    text.fillColor = 'black';
+    text.fontFamily = 'serif'
+    text.fontSize = txs;
+    text.content = String(size) + String(unit);
 }

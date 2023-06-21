@@ -66,9 +66,10 @@ function generate () {
     var coords = [0, 0];
     var loop = [];
     //drawing the whole thing
-    grider(size, unit, globalheight, globalwidth, marg, scaling);
-    rowbyrow(rows, height, coords, tang, skew, scaling, marg, txs);
-    
+    if (![0,NaN].includes(parseFloat(size))) {
+        grider(size, unit, globalheight, globalwidth, marg, scaling, txs);
+      }
+    rowbyrow(rows, height, coords, tang, skew, scaling, marg, txs);   
 }
 
 paper.install(window);
