@@ -1,4 +1,4 @@
-import {rowbyrow, block} from "./functions.js";
+import {rowbyrow, block, grider} from "./functions.js";
 
 function generate () {
     // Get a reference to the canvas object
@@ -9,7 +9,10 @@ function generate () {
 
     const scx = document.getElementById("schor").value / 50;
     const scy = document.getElementById("scver").value / 50;
+    const marg = document.getElementById("marg").value / 2;
+    const txs = document.getElementById("tsize").value / 5;
     const unit = document.getElementById("unit").value;
+    const size = document.getElementById('grid').value;
     var lines = document.getElementById("config").value.split("\n");
     var rows = [];
     var level = 0;
@@ -19,7 +22,6 @@ function generate () {
     const height = { L: L_height, s: s_height };
     var globalwidth = 0;
     var globalheight = 0;
-    const margins = [20, -10]
 
     for (let i = 0; i < lines.length; i++) {
         let l = lines[i].trimEnd().replace("    ", "\t");
@@ -36,9 +38,12 @@ function generate () {
         if (l.includes("#")) {
             let h = l.trim().slice(1);
             rows.push([h]);
-            let i = h.length;
-            while (i--) {
-                globalheight += height[h[i]];
+            if (!l.includes('\t')) {
+                let i = h.length;
+                while (i--) {
+                    console.log(h[i])
+                    globalheight += height[h[i]];
+            }
             }
         } else if (l != '') {
             let entry = new block(l.trim());
@@ -51,16 +56,19 @@ function generate () {
     }
     rows.splice(-1, 1); //delete the last bit
 
-    //settings
+    //settings, all values are unscaled
     const scaling = [globalheight / globalwidth, 1]
     scaling[0] *= scx
     scaling[1] *= scy
     const skew = 0.3 / scaling[0];
     const tang = (globalheight / globalwidth) * 0.2;
+    globalheight += globalwidth*tang/2
     var coords = [0, 0];
     var loop = [];
     //drawing the whole thing
-    rowbyrow(rows, height, coords, tang, skew, scaling, margins);
+    grider(size, unit, globalheight, globalwidth, marg, scaling);
+    rowbyrow(rows, height, coords, tang, skew, scaling, marg, txs);
+    
 }
 
 paper.install(window);
@@ -102,7 +110,7 @@ for (let i=0; i<inps.length; i++) {
     el.addEventListener("keyup", () => {generate()});
 }
     
-const sliders = ['schor', 'scver']
+const sliders = ['schor', 'scver', 'marg', 'tsize']
 for (let i=0; i<sliders.length; i++) {
     let el = document.getElementById(sliders[i]);
     el.addEventListener("change", () => {generate()});

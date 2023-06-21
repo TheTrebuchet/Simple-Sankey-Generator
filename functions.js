@@ -12,7 +12,7 @@ export class block {
     }
 }
 //for drawing the box
-function delta(entry, height, coords, tang, skew, scaling, margins) {
+function delta(entry, height, coords, tang, skew, scaling, margins, txs) {
     const typ = entry.delta;
     const mass = entry.value;
     const name = entry.name;
@@ -78,7 +78,7 @@ function delta(entry, height, coords, tang, skew, scaling, margins) {
         verts = geo[typ];
     }
     for (let i = 0; i < verts.length; i++) {
-        verts[i] = [(verts[i][0] + coords[0]) * scaling[0] + margins[0], -(verts[i][1] + coords[1]) * scaling[1] - margins[1]];
+        verts[i] = [(verts[i][0] + coords[0]) * scaling[0] + margins, -(verts[i][1] + coords[1]) * scaling[1] + margins];
     }
 
     var path = new Path();
@@ -95,12 +95,12 @@ function delta(entry, height, coords, tang, skew, scaling, margins) {
     var text = new PointText(new Point(xy[0], xy[1]));
     text.justification = 'center';
     text.fillColor = 'black';
+    text.fontFamily = 'serif'
+    text.fontSize = txs;
     text.content = name + ' ' + String(mass) + entry.unit;
-    //let text = myInteractive.text(xy[0]*scaling,-xy[1], label);
-    //ax.annotate(name + '\n'+str(round(mass,2)) + args.unit, xy, ha='center', va='center',zorder=2).draggable()
 }
 //draws the whole figure, THE IMPORTANT PART
-export function rowbyrow(rows, height, coords, tang, skew, scaling, margins) {
+export function rowbyrow(rows, height, coords, tang, skew, scaling, margins, txs) {
     for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
         let h = 0;
@@ -117,7 +117,7 @@ export function rowbyrow(rows, height, coords, tang, skew, scaling, margins) {
         for (let i = 1; i < row.length; i++) {
             let entry = row[i];
             if (!entry.name) {
-                rowbyrow(entry, height, [coords[0] + mass, coords[1]], tang, skew, scaling, margins);
+                rowbyrow(entry, height, [coords[0] + mass, coords[1]], tang, skew, scaling, margins, txs);
                 //if last blocks were outputting, the coords are updated accordingly
                 for (let i = 1; i < entry.length - 1; i++) {
                     let b = entry[entry.length - 1][i];
@@ -130,7 +130,7 @@ export function rowbyrow(rows, height, coords, tang, skew, scaling, margins) {
             if (entry.delta.includes('@')) {
                 loop.push([entry, coords.copy(), h]);
             }
-            delta(entry, h, [coords[0] + mass, coords[1]], tang, s, scaling, margins);
+            delta(entry, h, [coords[0] + mass, coords[1]], tang, s, scaling, margins, txs);
             mass += entry.value;
             if (entry.delta.includes("-")) {
                 out += entry.value;
@@ -139,4 +139,44 @@ export function rowbyrow(rows, height, coords, tang, skew, scaling, margins) {
         coords[1] -= h;
         coords[0] += out;
     }
+}
+
+function gridersettings(path) {
+    path.strokeColor = '#c4c4c4';
+    path.strokeWidth = 1;
+    path.dashArray = [8, 4];
+}
+
+export function grider(size, unit, glh, glw, marg, scaling) {
+    var xsize = scaling[0]*size;
+    var xlen = Math.ceil((glw*scaling[0]+marg*2)/xsize)+2;
+    var ylen = Math.ceil((glh*scaling[1]+marg*2)/xsize)+2;
+    var xlim = (xlen-2)*xsize+marg
+    var ylim = (ylen-2)*xsize+marg
+    for (let i = 0; i < xlen; i++) {
+        var path = new Path();
+        gridersettings(path)
+        let xvar = (i-1)*xsize+marg;
+        path.add(new Point(xvar, 0));
+        path.add(new Point(xvar, ylim))
+    }
+    
+    for (let i = 0; i < ylen; i++) {
+        var path = new Path();
+        gridersettings(path)
+        let xvar = (i-1)*xsize+marg;
+        path.add(new Point(0, xvar));
+        path.add(new Point(xlim, xvar))
+    }
+    var frame = [[1,1],[1,ylim], [xlim, ylim], [xlim, 1], [1,1]]
+    for (let i = 0; i < 4; i++) {
+        var path = new Path()    
+        path.strokeColor = '#c4c4c4';
+        path.strokeWidth = 2;
+        path.add(new Point(frame[i]))
+        path.add(new Point(frame[i+1]))
+
+    }
+    
+
 }

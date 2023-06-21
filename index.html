@@ -9,17 +9,17 @@
     <!--script type="module" src="configarea.js"></script-->
     <script type="module" src="graphic.js"></script>
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function(event) { 
-         document.getElementById("download-to-svg").onclick = function(){
-          var fileName = "custom.svg"
-          var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({asString:true}));
-          var link = document.createElement("a");
-          link.download = fileName;
-          link.href = url;
-          link.click();
-         }
+        document.addEventListener("DOMContentLoaded", function (event) {
+            document.getElementById("download-to-svg").onclick = function () {
+                var fileName = "custom.svg"
+                var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({ asString: true }));
+                var link = document.createElement("a");
+                link.download = fileName;
+                link.href = url;
+                link.click();
+            }
         });
-     </script>
+    </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style type="text/css">
@@ -62,8 +62,8 @@
             <p> I strongly recommend writing the config in notepad or
                 elsewhere and pasting it here only after that, so that you don't lose it. Anywho, this website is
                 just
-                something that can help you in great need, the real Old-Style-Sankey is on Github, it is a python
-                script you can download and run locally.
+                something that can help you in great need, the local version is written in python and available on my
+                github. <br> Enjoy!
             </p>
         </div>
 
@@ -98,7 +98,7 @@
                         <label for="grid" class="form-label">Grid</label>
                         <input type="text" class="form-control" id="grid" placeholder="nope">
                     </div>
-                    
+
                 </div>
                 <br>
                 <!--div class="dropdown">
@@ -125,51 +125,40 @@
     </div>
     <br>
     <div class="container">
-        <h2 id="command-options">Command options</h2>
-        <p><code>--h</code> shows help<br /><br />
-            <code>--unit</code> accepts a unit, like g/h<br /><br />
-            <code>--skew</code> is a percentage of the whole graphic width at which the inputs and outputs are
-            shifted to the side, 0 disables this effect, default is 0.2.<br /><br />
-            <code>--tang</code> is a multiplier for the cut-outs in input and output blocks, it specified
-            global angle at which they are created, default is 0.4.<br /><br />
-            <code>--grid</code> is an on/off flag that creates the grid<br /><br />
-            <code>--unitvalue</code> accepts a value by which the grid will form, default is 100<br /><br />
         <h2 id="generating-config">Generating config</h2>
-        <p>Generating the config files is very straight-forward.</p>
-        <h3 id="initiate-a-row">Initiate a row</h3>
+        <p>Just type in everything according to instructions below, its simple and short, just read it. As you type, if you do it correctly, new blocks should appear on the right. You can drag the text with your mouse to arrange everything as you like.</p>
+        <h4 id="initiate-a-row">Initiate a row</h4>
         <p>Place a <code>#</code> and specify height with <code>L</code> being large and
             <code>s</code> being small.
         </p>
-        <h3 id="initiate-blocks">Initiate blocks</h3>
-        <p>Specify input/operation/output with +/=/- and type in text that will be displayed in the block. <em>General
-                convention is that blocks should come in a sequence of outputs, operations and inputs, but that's just
-                you
-                choice</em></p>
-        <p>If you want to make loops, just make +@ for loop input and -@ for loop output. Currently only one loop is
+        <h4 id="initiate-blocks">Initiate blocks</h4>
+        <p>Specify <code>input/operation/output</code> with <code>+/=/-</code>, write a value without a space and type
+            in text that will be displayed in the block. <br>
+            Blocks should come in a sequence of outputs, operations and then inputs, but do as you wish.</em><br> New
+            blocks within the row should be written like a list, below one another.</p>
+        <!--p>If you want to make loops, just make +@ for loop input and -@ for loop output. Currently only one loop is
             supported.
-        </p>
+        </p-->
+        <p><em>End your file with a new line with <code>#</code>!</em></p>
         <div class="card w-50">
             <div class="card-body">
                 <pre><code>#s
 =1038.34 wet bicarbonate
--88.84 loss of CO$_2$</code></pre>
+-88.84 loss of CO$_2$
+#</code></pre>
             </div>
         </div>
-
-        <p>New blocks within the row exist are placed simply below. Any kind of python formatting is acceptable.<br />
-            Notably <code>\n</code> is for newline and <code>$_a$</code> is for subscripts
-            and <code>$^a$</code> is for superscripts</p>
-        <p>End your file with a new line with <code>#</code>!</p>
-        <h3 id="multi-level-blocks">Multi-level blocks</h3>
+        <br>
+        <h4 id="multi-level-blocks">Multi-level blocks</h4>
         <p>You can create many additional rows within a row.</p>
         <ol type="1">
             <li>First initiate a row like usual</li>
             <li>Place some new blocks</li>
-            <li>In the place where multiple rows would exist, just create an indentation and initiate new rows</li>
+            <li>In the place where multiple rows would exist, just create an indentation and initiate new rows with according <code>#</code></li>
         </ol>
-        <p>!!! be sure to make additional height in the top-level row. Say your top level row consists of one large and
+        <p><em> Be sure to make additional height in the top-level row.<br> Say your top level row consists of one large and
             one
-            small row, you initiate it by <code>#Ls</code> !!!</p>
+            small row, you initiate it by <code>#Ls</code> </em></p>
         <div class="card w-50">
             <div class="card-body">
                 <pre><code>#s
@@ -181,12 +170,13 @@
   =121.56 wet bicarbonate
   #s
   =121.56 drying</div></div></code></pre>
-                <p>change text position to your liking, be aware that while resizing the window still lets you drag it,
-                    if you
-                    zoom
-                    in
-                    or out you will lose that ability</p>
             </div>
+            <div class="container">
+                <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                  <p class="col-md-4 mb-0 text-body-secondary">2023 Jan Kulczycki</p>
+            
+                </footer>
+              </div>
 </body>
 
 </html>
