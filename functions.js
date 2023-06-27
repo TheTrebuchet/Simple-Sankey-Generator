@@ -129,7 +129,7 @@ export function rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy
             }
             delta(entry, h, [coords[0] + mass, coords[1]], tang, s, scaling, margx, margy, txs);
             if (entry.delta.includes("@")) {
-                loop.push([entry, coords[0]+mass, coords[1], h])
+                loop.push([entry, (coords[0]+mass)*scaling[0]+margx, -coords[1]*scaling[1]+margy, h])
             }
             mass += entry.value;
             if (entry.delta.includes("-")) {
@@ -207,22 +207,22 @@ export function grider(size, unit, glh, glw, margx, margy, scaling, txs) {
 
 export function loopygoop(loop, marg, loopmarg, arcmarg, scaling, globalheight) {
     //outer
-    var realwidthx = loop[0][0].value
-    var scalewidthx = realwidthx*scaling[0]
-    var scalewidthy = realwidthx**scaling[1]
-    let top = marg+scalewidthy+arcmarg
-    let bottom = marg+globalheight+scalewidthy+arcmarg
+    var inleftx = loop[0][1]
+    var inlefty = loop[0][2]
+    var outleftx = loop[1][1]
+    var outlefty = loop[1][2]+loop[1][3]*scaling[1]
+    var width = loop[0][0].value*scaling[0]
     var sl = [
-        [[marg, top],[marg, bottom]],
-        [[marg+scalewidthx, top], [marg+scalewidthx, bottom]],
-        [[marg+scalewidthx+arcmarg, top-arcmarg], [marg+scalewidthx+loopmarg+arcmarg, top-arcmarg]],
-        [[marg+scalewidthx+arcmarg, top-arcmarg-scalewidthy], [marg+scalewidthx+loopmarg+arcmarg+loop[1][1], top-arcmarg-scalewidthy]],
-        [[marg+scalewidthx+arcmarg, bottom+arcmarg], [marg+scalewidthx+loopmarg+arcmarg, bottom+arcmarg]],
-        [[marg+scalewidthx+arcmarg, bottom+arcmarg+scalewidthy], [marg+scalewidthx+loopmarg+arcmarg+loop[1][1], bottom+arcmarg+scalewidthy]],
-        [[marg+scalewidthx+loopmarg+2*arcmarg+loop[0][1], top+loop[0][2]],[marg+scalewidthx+loopmarg+2*arcmarg+loop[0][1], top]],
-        [[marg+2*scalewidthx+loopmarg+2*arcmarg+loop[0][1], top+loop[0][2]],[marg+2*scalewidthx+loopmarg+2*arcmarg+loop[0][1], top]],
-        [[marg+scalewidthx+loopmarg+2*arcmarg+loop[1][1],marg+scalewidthy+arcmarg-loop[1][2]], [marg+scalewidthx+loopmarg+2*arcmarg+loop[1][1],bottom]],
-        [[marg+2*scalewidthx+loopmarg+2*arcmarg+loop[1][1],marg+scalewidthy+arcmarg-loop[1][2]], [marg+2*scalewidthx+loopmarg+2*arcmarg+loop[1][1],bottom]],
+        [[inleftx-arcmarg*2-loopmarg-width, inlefty],[inleftx-arcmarg*2-loopmarg-width, outlefty]],
+        [[inleftx-2*arcmarg-loopmarg, inlefty], [inleftx-2*arcmarg-loopmarg, outlefty]],
+        [[inleftx-arcmarg-loopmarg, inlefty-arcmarg], [inleftx-arcmarg, inlefty-arcmarg]],
+        [[inleftx-arcmarg-loopmarg, inlefty-arcmarg-width], [inleftx-arcmarg, inlefty-arcmarg-width]],
+        [[outleftx-arcmarg-loopmarg, outlefty+arcmarg], [outleftx-arcmarg, outlefty+arcmarg]],
+        [[outleftx-arcmarg-loopmarg, outlefty+arcmarg+width], [outleftx-arcmarg, outlefty+arcmarg+width]],
+        [[inleftx, inlefty],[inleftx, inlefty]],
+        [[inleftx+width, inlefty],[inleftx+width, inlefty]],
+        [[outleftx, outlefty],[outleftx, outlefty]],
+        [[outleftx+width, outlefty],[outleftx+width, outlefty]],
     ]
     for (let i=0; i<sl.length; i++) {
         var path = new Path()
