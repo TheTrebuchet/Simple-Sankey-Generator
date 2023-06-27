@@ -1,4 +1,4 @@
-import {rowbyrow, block, grider} from "./functions.js";
+import {rowbyrow, block, grider, loopygoop} from "./functions.js";
 
 function generate () {
     // Get a reference to the canvas object
@@ -22,6 +22,7 @@ function generate () {
     const height = { L: L_height, s: s_height };
     var globalwidth = 0;
     var globalheight = 0;
+    var loopinit = 0;
 
     for (let i = 0; i < lines.length; i++) {
         let l = lines[i].trimEnd().replace("    ", "\t");
@@ -52,8 +53,12 @@ function generate () {
             if (entry.delta.includes("+")) {
                 globalwidth += entry.value;
             }
+            if (entry.delta.includes("@")) {
+                loopinit += entry.value;
+            }
         }
     }
+    loopinit /= 2;
     rows.splice(-1, 1); //delete the last bit
 
     //settings, all values are unscaled
@@ -63,13 +68,28 @@ function generate () {
     const skew = 0.3 / scaling[0];
     const tang = (globalheight / globalwidth) * 0.2;
     globalheight += globalwidth*tang/2
+    
     var coords = [0, 0];
-    var loop = [];
+    //loop and margin stuff
+    var loopmarg = 5*scaling[0]
+    var arcmarg = 10*scaling[0]
+    var margx = marg
+    var margy = marg
+    if (loopinit!=0) {
+        margx+=loopinit*scaling[0]+loopmarg+arcmarg*2
+        margy+=loopinit*scaling[1]+arcmarg
+    }
+    
+    
     //drawing the whole thing
     if (![0,NaN].includes(parseFloat(size))) {
-        grider(size, unit, globalheight, globalwidth, marg, scaling, txs);
+        grider(size, unit, globalheight, globalwidth, margx, margy, scaling, txs);
       }
-    rowbyrow(rows, height, coords, tang, skew, scaling, marg, txs);   
+    var loop = []
+    rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy, txs, loop);   
+    console.log(loop)
+    if (loopinit) {loopygoop(loop, marg, loopmarg, arcmarg, scaling, globalheight)}
+    
 }
 
 paper.install(window);

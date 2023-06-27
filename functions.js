@@ -12,7 +12,7 @@ export class block {
     }
 }
 //for drawing the box
-function delta(entry, height, coords, tang, skew, scaling, margins, txs) {
+function delta(entry, height, coords, tang, skew, scaling, margx, margy, txs) {
     const typ = entry.delta;
     const mass = entry.value;
     const name = entry.name;
@@ -78,7 +78,7 @@ function delta(entry, height, coords, tang, skew, scaling, margins, txs) {
         verts = geo[typ];
     }
     for (let i = 0; i < verts.length; i++) {
-        verts[i] = [(verts[i][0] + coords[0]) * scaling[0] + margins, -(verts[i][1] + coords[1]) * scaling[1] + margins];
+        verts[i] = [(verts[i][0] + coords[0]) * scaling[0] + margx, -(verts[i][1] + coords[1]) * scaling[1] + margy];
     }
 
     var path = new Path();
@@ -100,7 +100,7 @@ function delta(entry, height, coords, tang, skew, scaling, margins, txs) {
     text.content = name + ' ' + String(mass) + entry.unit;
 }
 //draws the whole figure, THE IMPORTANT PART
-export function rowbyrow(rows, height, coords, tang, skew, scaling, margins, txs) {
+export function rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy, txs, loop) {
     for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
         let h = 0;
@@ -117,7 +117,7 @@ export function rowbyrow(rows, height, coords, tang, skew, scaling, margins, txs
         for (let i = 1; i < row.length; i++) {
             let entry = row[i];
             if (!entry.name) {
-                rowbyrow(entry, height, [coords[0] + mass, coords[1]], tang, skew, scaling, margins, txs);
+                rowbyrow(entry, height, [coords[0] + mass, coords[1]], tang, skew, scaling, margx, margy, txs, loop);
                 //if last blocks were outputting, the coords are updated accordingly
                 for (let i = 1; i < entry.length - 1; i++) {
                     let b = entry[entry.length - 1][i];
@@ -127,10 +127,10 @@ export function rowbyrow(rows, height, coords, tang, skew, scaling, margins, txs
                 }
                 continue;
             }
-            if (entry.delta.includes('@')) {
-                loop.push([entry, coords.copy(), h]);
+            delta(entry, h, [coords[0] + mass, coords[1]], tang, s, scaling, margx, margy, txs);
+            if (entry.delta.includes("@")) {
+                loop.push([entry, coords[0]+mass, coords[1], h])
             }
-            delta(entry, h, [coords[0] + mass, coords[1]], tang, s, scaling, margins, txs);
             mass += entry.value;
             if (entry.delta.includes("-")) {
                 out += entry.value;
@@ -147,16 +147,16 @@ function gridersettings(path) {
     path.dashArray = [8, 4];
 }
 
-export function grider(size, unit, glh, glw, marg, scaling, txs) {
+export function grider(size, unit, glh, glw, margx, margy, scaling, txs) {
     var xsize = scaling[0]*size;
-    var xlen = Math.ceil((glw*scaling[0]+marg)/xsize)+2;
-    var ylen = Math.ceil((glh*scaling[1]+marg)/xsize)+2;
-    var xlim = (xlen-2)*xsize+marg
-    var ylim = (ylen-2)*xsize+marg
+    var xlen = Math.ceil((glw*scaling[0]+margx)/xsize)+2;
+    var ylen = Math.ceil((glh*scaling[1]+margx)/xsize)+2;
+    var xlim = (xlen-2)*xsize+margx
+    var ylim = (ylen-2)*xsize+margy
     for (let i = 0; i < xlen; i++) {
         var path = new Path();
         gridersettings(path)
-        let xvar = (i-1)*xsize+marg;
+        let xvar = (i-1)*xsize+margx;
         path.add(new Point(xvar, 0));
         path.add(new Point(xvar, ylim))
     }
@@ -164,7 +164,7 @@ export function grider(size, unit, glh, glw, marg, scaling, txs) {
     for (let i = 0; i < ylen; i++) {
         var path = new Path();
         gridersettings(path)
-        let xvar = (i-1)*xsize+marg;
+        let xvar = (i-1)*xsize+margx;
         path.add(new Point(0, xvar));
         path.add(new Point(xlim, xvar))
     }
@@ -177,8 +177,8 @@ export function grider(size, unit, glh, glw, marg, scaling, txs) {
         path.add(new Point(frame[i+1]))
 
     }
-    var start = [marg,ylim-xsize]
-    var end = [marg+xsize,ylim-xsize]
+    var start = [margx,ylim-xsize]
+    var end = [margx+xsize,ylim-xsize]
     var ard = 5
     var arrow = [
         start,
@@ -197,10 +197,56 @@ export function grider(size, unit, glh, glw, marg, scaling, txs) {
         path.add(new Point(arrow[i]))
         path.add(new Point(arrow[i+1]))
     }
-    var text = new PointText(new Point(marg+xsize/2,ylim-xsize-ard));
+    var text = new PointText(new Point(margx+xsize/2,ylim-xsize-ard));
     text.justification = 'center';
     text.fillColor = 'black';
     text.fontFamily = 'serif'
     text.fontSize = txs;
     text.content = String(size) + String(unit);
+}
+
+export function loopygoop(loop, marg, loopmarg, arcmarg, scaling, globalheight) {
+    //outer
+    var realwidthx = loop[0][0].value
+    var scalewidthx = realwidthx*scaling[0]
+    var scalewidthy = realwidthx**scaling[1]
+    let top = marg+scalewidthy+arcmarg
+    let bottom = marg+globalheight+scalewidthy+arcmarg
+    var sl = [
+        [[marg, top],[marg, bottom]],
+        [[marg+scalewidthx, top], [marg+scalewidthx, bottom]],
+        [[marg+scalewidthx+arcmarg, top-arcmarg], [marg+scalewidthx+loopmarg+arcmarg, top-arcmarg]],
+        [[marg+scalewidthx+arcmarg, top-arcmarg-scalewidthy], [marg+scalewidthx+loopmarg+arcmarg+loop[1][1], top-arcmarg-scalewidthy]],
+        [[marg+scalewidthx+arcmarg, bottom+arcmarg], [marg+scalewidthx+loopmarg+arcmarg, bottom+arcmarg]],
+        [[marg+scalewidthx+arcmarg, bottom+arcmarg+scalewidthy], [marg+scalewidthx+loopmarg+arcmarg+loop[1][1], bottom+arcmarg+scalewidthy]],
+        [[marg+scalewidthx+loopmarg+2*arcmarg+loop[0][1], top+loop[0][2]],[marg+scalewidthx+loopmarg+2*arcmarg+loop[0][1], top]],
+        [[marg+2*scalewidthx+loopmarg+2*arcmarg+loop[0][1], top+loop[0][2]],[marg+2*scalewidthx+loopmarg+2*arcmarg+loop[0][1], top]],
+        [[marg+scalewidthx+loopmarg+2*arcmarg+loop[1][1],marg+scalewidthy+arcmarg-loop[1][2]], [marg+scalewidthx+loopmarg+2*arcmarg+loop[1][1],bottom]],
+        [[marg+2*scalewidthx+loopmarg+2*arcmarg+loop[1][1],marg+scalewidthy+arcmarg-loop[1][2]], [marg+2*scalewidthx+loopmarg+2*arcmarg+loop[1][1],bottom]],
+    ]
+    for (let i=0; i<sl.length; i++) {
+        var path = new Path()
+        path.strokeColor = 'black'
+        path.add(new Point(sl[i][0]))
+        path.add(new Point(sl[i][1]))
+    }
+    var kurwy =[
+        circle(sl[2][1],sl[6][1]),
+        circle(sl[2][0],sl[1][0]),
+        circle(sl[3][0],sl[0][0]),
+        circle(sl[3][1],sl[7][1]),
+        circle(sl[4][0],sl[1][1]),
+        circle(sl[4][1],sl[8][1]),
+        circle(sl[5][0],sl[0][1]),
+        circle(sl[5][1],sl[9][1]),
+    ]
+    for (let i=0; i<kurwy.length; i++) {
+        var path = new Path.Arc(new Point(kurwy[i][0]), new Point(kurwy[i][1]), new Point(kurwy[i][2]))
+        path.strokeColor = 'black'
+    }
+}
+
+function circle(a,b) {
+    return [a,[(b[0]-a[0])*(2**0.5)/2+a[0], b[1]-(b[1]-a[1])*(2**0.5)/2],b]
+    
 }

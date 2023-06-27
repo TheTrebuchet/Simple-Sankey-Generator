@@ -1,24 +1,22 @@
-#L
-+389.0 etanol
-+195.5 monomer (octan winylu)
-+2.1 inicjator (nadtlenek benzoilu)
-#s
-=586.6 reakcja wstępna
-#L
-=586.6 mieszanina\nporeakcyjna
-+733.4 metanol
-+27.8 NaOH
-#s
-=1347.8 hydroliza (produkcja ciągła)
-#s
-=1347.8 sączenie
-#LsL
--1119.4 przesącz
-	#L 
-	=228.4 mokry polimer
-	#s
-	=228.4 suszenie
+#Ls
++@46.8 destylat 1
 	#L
-	-161.7 odparowany rozpuszczalnik
-	-66.7 suchy polimer
+	+200 surówka
+	#s
+	=200 pompa
+#s
+=246.8 krzyżowy wymiennik ciepła
+#sL
+	#s
+	=46.8 wymiennik ciepła
+	#L
+	=46.8 destylat 1
+=200 kolumna rektyfikacyjna
+#s
+=52 rozdzielacz strumieni
+=148 wymiennik ciepła
+#L
+-@46.8 destylat 1
+-5.2 destylat 2
+-148 ciecz wyczerpana
 #
