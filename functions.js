@@ -147,26 +147,31 @@ function gridersettings(path) {
     path.dashArray = [8, 4];
 }
 
-export function grider(size, unit, glh, glw, margx, margy, scaling, txs) {
+export function grider(size, unit, glh, glw, marg, scaling, txs, loopinit, arcmarg, loopmarg) {
+    
+    if (loopinit) {
+        glh+=loopinit*scaling[0]*2+arcmarg*2
+        glw+=arcmarg+loopmarg+loopinit*scaling[0]
+    }
     var xsize = scaling[0]*size;
-    var xlen = Math.ceil((glw*scaling[0]+margx)/xsize)+2;
-    var ylen = Math.ceil((glh*scaling[1]+margx)/xsize)+2;
-    var xlim = (xlen-2)*xsize+margx
-    var ylim = (ylen-2)*xsize+margy
+    var xlen = Math.ceil((glw+marg)/xsize)+2;
+    var ylen = Math.ceil((glh+marg)/xsize)+3;
+    var xlim = (xlen-2)*xsize+marg
+    var ylim = (ylen-2)*xsize+marg
     for (let i = 0; i < xlen; i++) {
         var path = new Path();
         gridersettings(path)
-        let xvar = (i-1)*xsize+margx;
-        path.add(new Point(xvar, 0));
-        path.add(new Point(xvar, ylim))
+        let dist = (i-1)*xsize+marg;
+        path.add(new Point(dist, 0));
+        path.add(new Point(dist, ylim))
     }
     
     for (let i = 0; i < ylen; i++) {
         var path = new Path();
         gridersettings(path)
-        let xvar = (i-1)*xsize+margx;
-        path.add(new Point(0, xvar));
-        path.add(new Point(xlim, xvar))
+        let dist = (i-1)*xsize+marg;
+        path.add(new Point(0, dist));
+        path.add(new Point(xlim, dist))
     }
     var frame = [[1,1],[1,ylim], [xlim, ylim], [xlim, 1], [1,1]]
     for (let i = 0; i < 4; i++) {
@@ -177,8 +182,8 @@ export function grider(size, unit, glh, glw, margx, margy, scaling, txs) {
         path.add(new Point(frame[i+1]))
 
     }
-    var start = [margx,ylim-xsize]
-    var end = [margx+xsize,ylim-xsize]
+    var start = [marg,ylim-xsize]
+    var end = [marg+xsize,ylim-xsize]
     var ard = 5
     var arrow = [
         start,
@@ -197,7 +202,7 @@ export function grider(size, unit, glh, glw, margx, margy, scaling, txs) {
         path.add(new Point(arrow[i]))
         path.add(new Point(arrow[i+1]))
     }
-    var text = new PointText(new Point(margx+xsize/2,ylim-xsize-ard));
+    var text = new PointText(new Point(marg+xsize/2,ylim-xsize-ard));
     text.justification = 'center';
     text.fillColor = 'black';
     text.fontFamily = 'serif'
@@ -205,7 +210,7 @@ export function grider(size, unit, glh, glw, margx, margy, scaling, txs) {
     text.content = String(size) + String(unit);
 }
 
-export function loopygoop(loop, marg, loopmarg, arcmarg, scaling, globalheight) {
+export function loopygoop(loop, marg, loopmarg, arcmarg, scaling, height) {
     //outer
     var inleftx = loop[0][1]
     var inlefty = loop[0][2]
@@ -213,16 +218,16 @@ export function loopygoop(loop, marg, loopmarg, arcmarg, scaling, globalheight) 
     var outlefty = loop[1][2]+loop[1][3]*scaling[1]
     var width = loop[0][0].value*scaling[0]
     var sl = [
-        [[inleftx-arcmarg*2-loopmarg-width, inlefty],[inleftx-arcmarg*2-loopmarg-width, outlefty]],
-        [[inleftx-2*arcmarg-loopmarg, inlefty], [inleftx-2*arcmarg-loopmarg, outlefty]],
-        [[inleftx-arcmarg-loopmarg, inlefty-arcmarg], [inleftx-arcmarg, inlefty-arcmarg]],
-        [[inleftx-arcmarg-loopmarg, inlefty-arcmarg-width], [inleftx-arcmarg, inlefty-arcmarg-width]],
-        [[outleftx-arcmarg-loopmarg, outlefty+arcmarg], [outleftx-arcmarg, outlefty+arcmarg]],
-        [[outleftx-arcmarg-loopmarg, outlefty+arcmarg+width], [outleftx-arcmarg, outlefty+arcmarg+width]],
-        [[inleftx, inlefty],[inleftx, inlefty]],
-        [[inleftx+width, inlefty],[inleftx+width, inlefty]],
-        [[outleftx, outlefty],[outleftx, outlefty]],
-        [[outleftx+width, outlefty],[outleftx+width, outlefty]],
+        [[marg, marg+width+arcmarg],[marg, marg+width+arcmarg+height]],
+        [[marg+width, marg+width+arcmarg], [marg+width, marg+width+arcmarg+height]],
+        [[marg+width+arcmarg, inlefty-arcmarg], [inleftx-arcmarg, inlefty-arcmarg]],
+        [[marg+width+arcmarg, inlefty-arcmarg-width], [inleftx-arcmarg, inlefty-arcmarg-width]],
+        [[marg+width+arcmarg, marg+width+2*arcmarg+height], [outleftx-arcmarg, marg+width+2*arcmarg+height]],
+        [[marg+width+arcmarg, marg+2*width+2*arcmarg+height], [outleftx-arcmarg, marg+2*width+2*arcmarg+height]],
+        [[inleftx, inlefty],[inleftx, marg+width+arcmarg]],
+        [[inleftx+width, inlefty],[inleftx+width, marg+width+arcmarg]],
+        [[outleftx, outlefty],[outleftx, marg+width+arcmarg+height]],
+        [[outleftx+width, outlefty],[outleftx+width, marg+width+arcmarg+height]],
     ]
     for (let i=0; i<sl.length; i++) {
         var path = new Path()
