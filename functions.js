@@ -16,7 +16,7 @@ function delta(entry, height, coords, tang, skew, scaling, margx, margy, txs) {
     const typ = entry.delta;
     const mass = entry.value;
     const name = entry.name;
-    var insert = (tang * mass) / 2;
+    var insert = (tang * mass*scaling[0]) / 2;
     if (insert > 0.2 * height) {
         insert = 0.2 * height;
     }
@@ -62,7 +62,7 @@ function delta(entry, height, coords, tang, skew, scaling, margx, margy, txs) {
     if (typ == "-") {
         let preverts = geo[typ];
         for (let i = 0; i < preverts.length; i++) {
-            verts.push([preverts[i][0] + preverts[i][1] * skew,
+            verts.push([preverts[i][0] + preverts[i][1]*scaling[1] * skew,
             preverts[i][1]
             ]);
         }
@@ -70,7 +70,7 @@ function delta(entry, height, coords, tang, skew, scaling, margx, margy, txs) {
         let preverts = geo[typ];
         for (let i = 0; i < preverts.length; i++) {
             verts.push([
-                preverts[i][0] + (preverts[i][1] + height) * skew,
+                preverts[i][0] + (preverts[i][1] + height)*scaling[1] * skew,
                 preverts[i][1]
             ]);
         }
@@ -158,6 +158,7 @@ export function grider(size, unit, glh, glw, marg, scaling, txs, loopinit, arcma
     var ylen = Math.ceil((glh+marg)/xsize)+3;
     var xlim = (xlen-2)*xsize+marg
     var ylim = (ylen-2)*xsize+marg
+    console.log(xlim, ylim)
     for (let i = 0; i < xlen; i++) {
         var path = new Path();
         gridersettings(path)
@@ -212,6 +213,8 @@ export function grider(size, unit, glh, glw, marg, scaling, txs, loopinit, arcma
 
 export function loopygoop(loop, marg, loopmarg, arcmarg, scaling, height) {
     //outer
+    //testing
+    
     var inleftx = loop[0][1]
     var inlefty = loop[0][2]
     var outleftx = loop[1][1]
@@ -229,6 +232,11 @@ export function loopygoop(loop, marg, loopmarg, arcmarg, scaling, height) {
         [[outleftx, outlefty],[outleftx, marg+width+arcmarg+height]],
         [[outleftx+width, outlefty],[outleftx+width, marg+width+arcmarg+height]],
     ]
+    var path = new Path()
+    path.strokeColor =  'black'
+    path.add(new Point([5, 0]))
+    path.add(new Point([5, width+marg+arcmarg+height]))
+    
     for (let i=0; i<sl.length; i++) {
         var path = new Path()
         path.strokeColor = 'black'

@@ -76,11 +76,11 @@
                     <div class="col-md-5">
                         <label class="form-label" for="horsc">Horizontal Scale</label>
                         <div class="range">
-                            <input type="range" class="form-range" id="schor" min="0" max="100" />
+                            <input type="range" class="form-range" id="schor" min="0" max="100" value="75" />
                         </div>
                         <label class="form-label" for="scver">Vertical Scale</label>
                         <div class="range">
-                            <input type="range" class="form-range" id="scver" min="0" max="100" />
+                            <input type="range" class="form-range" id="scver" min="0" max="100" value="75"/>
                         </div>
                         <label class="form-label" for="marg">Margin</label>
                         <div class="range">
@@ -127,9 +127,9 @@
             in text that will be displayed in the block. <br>
             Blocks should come in a sequence of outputs, operations and then inputs, but do as you wish.</em><br> New
             blocks within the row should be written like a list, below one another.</p>
-        <!--p>If you want to make loops, just make +@ for loop input and -@ for loop output. Currently only one loop is
+        <p>If you want to make loops, just make <code>+@</code> for loop input and <code>-@</code> for loop output. Currently only one loop is
             supported.
-        </p-->
+        </p>
         <p><em>End your file with a new line with <code>#</code>!</em></p>
         <div class="card" style="width: 18rem;">
             <div class="card-body">
@@ -145,13 +145,15 @@
         <ol type="1">
             <li>First initiate a row like usual</li>
             <li>Place some new blocks</li>
-            <li>In the place where multiple rows would exist, just create an indentation and initiate new rows with
+            <li>In the place where multiple rows would exist, just place indentation (four spaces/tab) or <code>></code> and initiate new rows with
                 according <code>#</code></li>
         </ol>
         <p><em> Be sure to make additional height in the top-level row.<br> Say your top level row consists of one large
                 and
                 one
                 small row, you initiate it by <code>#Ls</code> </em></p>
+        <div class="row">
+        <div class="container">
         <div class="card" style="width: 18rem;"> 
             <div class="card-body">
                 <pre><code>#s
@@ -166,6 +168,22 @@
             </div>
         </div>
     </div>
+        <div class="container">
+        <div class="card" style="width: 18rem;"> 
+            <div class="card-body">
+                <pre><code>#s
+=1038.34
+-88.84 loss of CO$_2$
+#Ls
+-916.78 filtrate
+>#L
+>=121.56 wet bicarbonate
+>#s
+>=121.56 drying</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
     <br>
     <div class="container">
         <h2 id="examples">Examples</h2>

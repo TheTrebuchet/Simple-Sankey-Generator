@@ -7,8 +7,8 @@ function generate () {
     paper.setup(canvas);
     // Create a Paper.js Path to draw a line into it:
 
-    const scx = document.getElementById("schor").value / 20;
-    const scy = document.getElementById("scver").value / 20;
+    const scx = document.getElementById("schor").value / 100;
+    const scy = document.getElementById("scver").value / 100;
     const marg = document.getElementById("marg").value / 2;
     const txs = document.getElementById("tsize").value / 5;
     const unit = document.getElementById("unit").value;
@@ -25,7 +25,7 @@ function generate () {
     var loopinit = 0;
 
     for (let i = 0; i < lines.length; i++) {
-        let l = lines[i].trimEnd().replace("    ", "\t");
+        let l = lines[i].trimEnd().replace(">", "\t").replace("    ", "\t");
 
         if (l.includes("\t") && l.includes("#")) {
             level += 1;
@@ -42,7 +42,6 @@ function generate () {
             if (!l.includes('\t')) {
                 let i = h.length;
                 while (i--) {
-                    console.log(h[i])
                     globalheight += height[h[i]];
             }
             }
@@ -62,15 +61,17 @@ function generate () {
     rows.splice(-1, 1); //delete the last bit
 
     //settings, all values are unscaled
-    const scaling = [globalheight / globalwidth, 1]
+    const scaling = [
+        (document.getElementById("myCanvas").width-marg)/ (globalwidth), 
+        (document.getElementById("myCanvas").height-marg)/(globalheight)
+    ]
     scaling[0] *= scx
     scaling[1] *= scy
-    const skew = 0.3 / scaling[0];
-    const tang = (globalheight / globalwidth) * 0.2;
-    console.log(globalwidth)
-    globalheight *= scaling[1]
-    globalheight += globalwidth*tang/2*scaling[1]
+    const skew = 0.1 / scaling[0];
+    const tang = 0.1;
     globalwidth *= scaling[0]
+    globalheight += globalwidth*tang/2
+    globalheight *= scaling[1]
     
     var coords = [0, 0];
     //loop and margin stuff
@@ -84,12 +85,13 @@ function generate () {
     }
     
     
+    
     //drawing the whole thing
     
     var loop = []
     if (![0,NaN].includes(parseFloat(size))) {grider(size, unit, globalheight, globalwidth, marg, scaling, txs, loopinit, arcmarg, loopmarg)}
-    rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy, txs, loop);   
-    console.log(loop)
+    rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy, txs, loop);
+    globalheight+=globalwidth/scaling[0]*tang
     if (loopinit) {loopygoop(loop, marg, loopmarg, arcmarg, scaling, globalheight)}
     
     
