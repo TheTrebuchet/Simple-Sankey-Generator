@@ -90,7 +90,8 @@ function generate () {
     
     var loop = []
     if (![0,NaN].includes(parseFloat(size))) {grider(size, unit, globalheight, globalwidth, marg, scaling, txs, loopinit, arcmarg, loopmarg)}
-    rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy, txs, loop);
+    var mass = 0
+    rowbyrow(rows, height, coords, mass, tang, skew, scaling, margx, margy, txs, loop);
     globalheight+=globalwidth/scaling[0]*tang
     if (loopinit) {loopygoop(loop, marg, loopmarg, arcmarg, scaling, globalheight)}
     

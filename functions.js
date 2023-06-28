@@ -100,14 +100,14 @@ function delta(entry, height, coords, tang, skew, scaling, margx, margy, txs) {
     text.content = name + ' ' + String(mass) + entry.unit;
 }
 //draws the whole figure, THE IMPORTANT PART
-export function rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy, txs, loop) {
+export function rowbyrow(rows, height, coords, mass, tang, skew, scaling, margx, margy, txs, loop) {
     for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
         let h = 0;
         for (let i = 0; i < row[0].length; i++) {
             h += height[row[0][i]];
         }
-        let mass = 0;
+        mass = 0;
         let out = 0;
         let ind = rows.indexOf(row);
         let s = skew;
@@ -117,7 +117,7 @@ export function rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy
         for (let i = 1; i < row.length; i++) {
             let entry = row[i];
             if (!entry.name) {
-                rowbyrow(entry, height, [coords[0] + mass, coords[1]], tang, skew, scaling, margx, margy, txs, loop);
+                mass = rowbyrow(entry, height, [coords[0] + mass, coords[1]], mass, tang, skew, scaling, margx, margy, txs, loop);
                 //if last blocks were outputting, the coords are updated accordingly
                 for (let i = 1; i < entry.length - 1; i++) {
                     let b = entry[entry.length - 1][i];
@@ -139,6 +139,7 @@ export function rowbyrow(rows, height, coords, tang, skew, scaling, margx, margy
         coords[1] -= h;
         coords[0] += out;
     }
+    return mass
 }
 
 function gridersettings(path) {
