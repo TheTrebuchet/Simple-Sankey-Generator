@@ -158,7 +158,6 @@ export function grider(size, unit, glh, glw, marg, scaling, txs, loopinit, arcma
     var ylen = Math.ceil((glh+marg)/xsize)+3;
     var xlim = (xlen-2)*xsize+marg
     var ylim = (ylen-2)*xsize+marg
-    console.log(xlim, ylim)
     for (let i = 0; i < xlen; i++) {
         var path = new Path();
         gridersettings(path)
@@ -232,10 +231,6 @@ export function loopygoop(loop, marg, loopmarg, arcmarg, scaling, height) {
         [[outleftx, outlefty],[outleftx, marg+width+arcmarg+height]],
         [[outleftx+width, outlefty],[outleftx+width, marg+width+arcmarg+height]],
     ]
-    var path = new Path()
-    path.strokeColor =  'black'
-    path.add(new Point([5, 0]))
-    path.add(new Point([5, width+marg+arcmarg+height]))
     
     for (let i=0; i<sl.length; i++) {
         var path = new Path()
