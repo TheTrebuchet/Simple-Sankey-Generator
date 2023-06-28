@@ -80,7 +80,7 @@
                         </div>
                         <label class="form-label" for="scver">Vertical Scale</label>
                         <div class="range">
-                            <input type="range" class="form-range" id="scver" min="0" max="100" value="75"/>
+                            <input type="range" class="form-range" id="scver" min="0" max="100" value="75" />
                         </div>
                         <label class="form-label" for="marg">Margin</label>
                         <div class="range">
@@ -127,7 +127,8 @@
             in text that will be displayed in the block. <br>
             Blocks should come in a sequence of outputs, operations and then inputs, but do as you wish.</em><br> New
             blocks within the row should be written like a list, below one another.</p>
-        <p>If you want to make loops, just make <code>+@</code> for loop input and <code>-@</code> for loop output. Currently only one loop is
+        <p>If you want to make loops, just make <code>+@</code> for loop input and <code>-@</code> for loop output.
+            Currently only one loop is
             supported.
         </p>
         <p><em>End your file with a new line with <code>#</code>!</em></p>
@@ -145,7 +146,8 @@
         <ol type="1">
             <li>First initiate a row like usual</li>
             <li>Place some new blocks</li>
-            <li>In the place where multiple rows would exist, just place indentation (four spaces/tab) or <code>></code> and initiate new rows with
+            <li>In the place where multiple rows would exist, just place indentation (four spaces/tab) or <code>></code>
+                and initiate new rows with
                 according <code>#</code></li>
         </ol>
         <p><em> Be sure to make additional height in the top-level row.<br> Say your top level row consists of one large
@@ -153,10 +155,10 @@
                 one
                 small row, you initiate it by <code>#Ls</code> </em></p>
         <div class="row">
-        <div class="container">
-        <div class="card" style="width: 18rem;"> 
-            <div class="card-body">
-                <pre><code>#s
+            <div class="container">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <pre><code>#s
 =1038.34
 -88.84 loss of CO$_2$
 #Ls
@@ -165,13 +167,13 @@
   =121.56 wet bicarbonate
   #s
   =121.56 drying</code></pre>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-        <div class="container">
-        <div class="card" style="width: 18rem;"> 
-            <div class="card-body">
-                <pre><code>#s
+            <div class="container">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <pre><code>#s
 =1038.34
 -88.84 loss of CO$_2$
 #Ls
@@ -180,22 +182,22 @@
 >=121.56 wet bicarbonate
 >#s
 >=121.56 drying</code></pre>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-    <br>
-    <div class="container">
-        <h2 id="examples">Examples</h2>
         <br>
-        <div class="row">
-            <div class="container">
-                <div class="card" style="width: 28rem;">
-                    <div class="card-header">
-                        Sankey 11
-                    </div>
-                    <div class="card-body">
-                        <pre><code>#L
+        <div class="container">
+            <h2 id="examples">Examples</h2>
+            <br>
+            <div class="row">
+                <div class="container">
+                    <div class="card" style="width: 28rem;">
+                        <div class="card-header">
+                            Sankey 11
+                        </div>
+                        <div class="card-body">
+                            <pre><code>#L
 +389.0 etanol
 +195.5 monomer (octan winylu)
 +2.1 inicjator (nadtlenek benzoilu)
@@ -219,17 +221,46 @@
     -161.7 odparowany rozpuszczalnik
     -66.7 suchy polimer
 #</code></pre>
-                    </div>
+                        </div>
 
-                </div>
-            </div>
-            <div class="container">
-                <div class="card" style="width: 28rem;">
-                    <div class="card-header">
-                        Sankey bicarbonate
                     </div>
-                    <div class="card-body">
-                        <pre><code>#L
+                    <div class="card" style="width: 28rem;">
+                        <div class="card-header">
+                            Loops
+                        </div>
+                        <div class="card-body">
+                            <pre><code>#Ls
++@46.8 destylat 1
+    #L
+    +200 surówka
+    #s
+    =200 pompa
+#s
+=246.8 krzyżowy wymiennik ciepła
+#sL
+    #s
+    =46.8 wymiennik ciepła\n
+    #L
+    =46.8 destylat 1
+=200 kolumna rektyfikacyjna
+#s
+-@46.8 destylat 1
+=52 rozdzielacz\nstrumieni
+=148 wymiennik ciepła
+#L
+-52 destylat 2
+-148 ciecz wyczerpana
+#</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="card" style="width: 28rem;">
+                        <div class="card-header">
+                            Sankey bicarbonate
+                        </div>
+                        <div class="card-body">
+                            <pre><code>#L
 +660 brine
 +151.78 NH3
 #s
@@ -255,27 +286,28 @@
     -53.18 water
     -68.38 bicarbonate
 #</code></pre>
+                        </div>
                     </div>
                 </div>
+                    
             </div>
         </div>
-    </div>
-    <div class="container">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-            <div class="col-md-4 d-flex align-items-center">
-                <span class="mb-3 mb-md-0 text-body-secondary">Jan Kulczycki - TheTrebuchet</span>
-            </div>
-            <a href="https://github.com/TheTrebuchet/Old-Style-Sankey" class="text-decoration-none">
-                Link to local python code - Old-Style-Sankey Github Page
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
-                    viewBox="0 0 16 16">
-                    <path
-                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z">
-                    </path>
-                </svg>
-            </a>
-        </footer>
-    </div>
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                <div class="col-md-4 d-flex align-items-center">
+                    <span class="mb-3 mb-md-0 text-body-secondary">Jan Kulczycki - TheTrebuchet</span>
+                </div>
+                <a href="https://github.com/TheTrebuchet/Old-Style-Sankey" class="text-decoration-none">
+                    Link to local python code - Old-Style-Sankey Github Page
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-github" viewBox="0 0 16 16">
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z">
+                        </path>
+                    </svg>
+                </a>
+            </footer>
+        </div>
 </body>
 
 </html>

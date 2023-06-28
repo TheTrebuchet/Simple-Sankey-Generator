@@ -8,15 +8,15 @@
 =246.8 krzyżowy wymiennik ciepła
 #sL
 	#s
-	=46.8 wymiennik ciepła
+	=46.8 wymiennik ciepła\n
 	#L
 	=46.8 destylat 1
 =200 kolumna rektyfikacyjna
 #s
-=52 rozdzielacz strumieni
+-@46.8 destylat 1
+=52 rozdzielacz\nstrumieni
 =148 wymiennik ciepła
 #L
--@46.8 destylat 1
--5.2 destylat 2
+-52 destylat 2
 -148 ciecz wyczerpana
 #
