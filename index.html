@@ -134,9 +134,12 @@
         <p><em>End your file with a new line with <code>#</code>!</em></p>
         <div class="card" style="width: 18rem;">
             <div class="card-body">
-                <pre><code>#s
-=1038.34 wet bicarbonate
--88.84 loss of CO$_2$
+                <pre><code>#L
++100 added
+#s
+=100 transferred
+#L
+-100 removed
 #</code></pre>
             </div>
         </div>
@@ -158,30 +161,34 @@
             <div class="container">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
-                        <pre><code>#s
-=1038.34
--88.84 loss of CO$_2$
-#Ls
--916.78 filtrate
-  #L
-  =121.56 wet bicarbonate
-  #s
-  =121.56 drying</code></pre>
+                        <pre><code>#L
++100 added
+#s
+=100 transferred
+#sL
+-50 removed
+    #s
+    =50 transferred
+    #L
+    -50 removed
+#</code></pre>
                     </div>
                 </div>
             </div>
             <div class="container">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
-                        <pre><code>#s
-=1038.34
--88.84 loss of CO$_2$
-#Ls
--916.78 filtrate
->#L
->=121.56 wet bicarbonate
+                        <pre><code>#L
++100 added
+#s
+=100 transferred
+#sL
+-50 removed
 >#s
->=121.56 drying</code></pre>
+>=50 transferred
+>#L
+>-50 removed
+#</code></pre>
                     </div>
                 </div>
             </div>
