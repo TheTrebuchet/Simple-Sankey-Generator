@@ -2,9 +2,9 @@
 
 Generator of sankey diagrams in the old style
 
-## Basics
+Here is the link to the website! 
 
-In order to use this program, download the folder, run the `python graphic.py` in terminal followed by config.txt file name. It should be located in the same folder but it doesn't have to be, just write the whole path.
+https://thetrebuchet.github.io/Simple-Sankey-Generator/
 
 ## Command options
 
